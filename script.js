@@ -1,9 +1,10 @@
 // BUDGET CONTROLLER
 var budgetController = (function () {
 
-    var Expense = function (id, description, value) {
+    var Expense = function (id, description, time, value) {
         this.id = id;
         this.description = description;
+        this.time = time;
         this.value = value;
         this.percentage = -1;
     };
@@ -22,9 +23,10 @@ var budgetController = (function () {
     
 
 
-    var Income = function (id, description, value) {
+    var Income = function (id, description, time, value) {
         this.id = id;
         this.description = description;
+        this.time = time;
         this.value = value;
     };
 
@@ -56,7 +58,7 @@ var budgetController = (function () {
 
 
     return {
-        addItem: function (type, des, val) {
+        addItem: function (type, des, t, val) {
             var newItem, ID;
 
 
@@ -69,9 +71,9 @@ var budgetController = (function () {
 
             // Create new item based on 'inc' or 'exp' type
             if (type === 'exp') {
-                newItem = new Expense(ID, des, val);
+                newItem = new Expense(ID, des, t, val);
             } else if (type === 'inc') {
-                newItem = new Income(ID, des, val);
+                newItem = new Income(ID, des, t, val);
             }
 
             // Push it into our data structure
@@ -142,6 +144,7 @@ var UIController = (function () {
     var DOMstrings = {
         inputType: '.add__type',
         inputDescription: '.add__description',
+        inputTime: '.add__time',
         inputValue: '.add__value',
         inputBtn: '.add__btn',
         incomeContainer: '.income__list',
@@ -190,10 +193,12 @@ var UIController = (function () {
 
     return {
         getInput: function () {
+            var x = new Date();
             return {
                 type: document.querySelector(DOMstrings.inputType).value, // Will be either inc or exp
                 description: document.querySelector(DOMstrings.inputDescription).value,
-                value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
+                value: parseFloat(document.querySelector(DOMstrings.inputValue).value),
+                time: document.querySelector(DOMstrings.inputTime).value=x
             };
         },
 
@@ -205,16 +210,17 @@ var UIController = (function () {
             if (type === 'inc') {
                 element = DOMstrings.incomeContainer;
 
-                html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="inc-%id%"> <div class="item__description">%description% </div> <div class="item__time"><span> in</span> : %time%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             } else if (type === 'exp') {
                 element = DOMstrings.expensesContainer;
 
-                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div> <div class="item__time"><span> in</span> : %time%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             }
 
             // Replace the placeholder text with some actual data
             newHtml = html.replace('%id%', obj.id);
             newHtml = newHtml.replace('%description%', obj.description);
+            newHtml = newHtml.replace('%time%', obj.time);
             newHtml = newHtml.replace('%value%', formatNumber(obj.value, type));
 
             // Insert the HTML into the DOM
@@ -276,6 +282,7 @@ var UIController = (function () {
             var fields = document.querySelectorAll(
                 DOMstrings.inputType + ',' +
                 DOMstrings.inputDescription + ',' +
+                DOMstrings.inputTime + ',' +
                 DOMstrings.inputValue
             );
             nodeListForEach(fields, function(cur){
@@ -347,7 +354,7 @@ var controller = (function (budgetCtrl, UICtrl) {
         input = UICtrl.getInput();
         if (input.description !== "" && !isNaN(input.value) && input.value > 0){
             // add the item to the budget controller
-            newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+            newItem = budgetCtrl.addItem(input.type, input.description, input.time, input.value);
 
             // add the item to the UI
             UICtrl.addListItem(newItem, input.type);

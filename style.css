@@ -213,7 +213,10 @@ h2 {
 .item__description {
     float: left;
 }
-
+.item__time {
+    float: left;
+    transition: transform 0.3s;
+}
 .item__value {
     float: left;
     transition: transform 0.3s;
@@ -232,11 +235,13 @@ h2 {
 }
 
 .income .item__value,
+.income .item__time,
 .income .item__delete--btn {
     color: #28B9B5;
 }
 
 .expenses .item__value,
+.expenses .item__time,
 .expenses .item__percentage,
 .expenses .item__delete--btn {
     color: #FF5049;
