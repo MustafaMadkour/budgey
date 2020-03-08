@@ -193,12 +193,12 @@ var UIController = (function () {
 
     return {
         getInput: function () {
-            var x = new Date();
+            const { format,isToday } =dateFns;
             return {
                 type: document.querySelector(DOMstrings.inputType).value, // Will be either inc or exp
                 description: document.querySelector(DOMstrings.inputDescription).value,
                 value: parseFloat(document.querySelector(DOMstrings.inputValue).value),
-                time: document.querySelector(DOMstrings.inputTime).value=x.getDate()+'.'+(x.getMonth()+1)+'.'+x.getUTCFullYear()+', '+x.getHours()+':'+x.getMinutes()
+                time: document.querySelector(DOMstrings.inputTime).value = format(new Date(), 'DD.MM.YYYY, HH:MM')
             };
         },
 
@@ -214,7 +214,7 @@ var UIController = (function () {
             } else if (type === 'exp') {
                 element = DOMstrings.expensesContainer;
 
-                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div> </br><div class="item__time"><span></span> %time%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div> </br><div class="item__time"><span></span>  %time%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
             }
 
             // Replace the placeholder text with some actual data
@@ -319,6 +319,7 @@ var controller = (function (budgetCtrl, UICtrl) {
 
         document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
     };
+
 
 
     var updateBudget = function() {
