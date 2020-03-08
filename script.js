@@ -9,7 +9,7 @@ var budgetController = (function () {
     };
 
     Expense.prototype.calcPercentage= function(totalIncome) {
-        this.percentage = Math.round((this.value / totalIncome)*100);         
+        this.percentage = Math.round((this.value / totalIncome)*100);          
     };
     
 
@@ -172,6 +172,10 @@ var UIController = (function () {
 
             // Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+        },
+        deleteListItem: function(selectorID){
+            var el = document.getElementById(selectorID);
+            el.parentNode.removeChild(el);
         },
 
         clearFields: function() {
