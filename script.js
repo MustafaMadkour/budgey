@@ -8,7 +8,9 @@ var budgetController = (function () {
         this.percentage = -1;
     };
 
-
+    Expense.prototype.calcPercentage= function(totalIncome) {
+        this.percentage = Math.round((this.value / totalIncome)*100);         
+    };
     
 
 
@@ -71,6 +73,17 @@ var budgetController = (function () {
             return newItem;
         },
 
+        deleteItem: function(type, id) {
+            var ids, index;
+            ids = data.allData[type].map(function(current){
+                return current.id;
+            });
+            index = ids.indexOf(id);
+            if (index !== -1) {
+                data.allData[type].splice(index, 1);
+            }
+        },
+
         calculateBudget: function(){
             // calculate totals
             calculateTotal("exp");
@@ -82,6 +95,11 @@ var budgetController = (function () {
             // calculate percentage
             (data.totals.inc > 0) ? data.percentage = Math.round((data.totals.exp / data.totals.inc)*100) : data.percentage = -1;
         },
+
+        calculatePercentages: function() {
+
+        },
+
         getBudget: function() {
             return {
                 budget: data.budget,
@@ -215,6 +233,13 @@ var controller = (function (budgetCtrl, UICtrl) {
         UICtrl.displayBudget(budget);
     };
 
+
+
+    var updatePercentages = function() {
+
+    };
+
+
     var ctrlAddItem = function () {
         var input, newItem;
 
@@ -232,6 +257,9 @@ var controller = (function (budgetCtrl, UICtrl) {
 
             // calculate and update budget
             updateBudget();
+
+            // update percentages 
+            updatePercentages();
         }
         
     };
@@ -243,11 +271,20 @@ var controller = (function (budgetCtrl, UICtrl) {
             // the parent id of an item ("inc-1"...)
             splitId = itemId.split('-');
             type = splitId[0];
-            ID = splitId[1];
+            ID = parseInt(splitId[1]);
 
             // delete item from data structure
-            
+            budgetCtrl.deleteItem(type, ID);
 
+            // delete the item from the UI
+            UICtrl.deleteListItem(itemId);
+
+            // calculate and update budget
+            updateBudget();
+
+
+            // update percentages 
+            updatePercentages();
         }
     };
 
