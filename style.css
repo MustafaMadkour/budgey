@@ -137,6 +137,7 @@ body {
 }
 
 .add__description,
+.add__time,
 .add__value {
     border: 1px solid #e7e7e7;
     background-color: #fff;
@@ -150,6 +151,7 @@ body {
 }
 
 .add__description { width: 400px;}
+.add__time { width: 300px;}
 .add__value { width: 100px;}
 
 .add__btn {
@@ -168,6 +170,7 @@ body {
 
 .add__type:focus,
 .add__description:focus,
+.add__time:focus,
 .add__value:focus {
     outline: none;
     border: 1px solid #28B9B5;
